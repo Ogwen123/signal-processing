@@ -6,6 +6,9 @@
 
 #include "ppm.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
 int main(int argc, char *argv[])
 {
     glfwSetErrorCallback([](int error, const char *description)
@@ -37,8 +40,9 @@ int main(int argc, char *argv[])
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    std::string image = "../assets/test.ppm";
-    load(image);
+    std::string image = "../assets/test_image.ppm";
+    int width, height;
+    GLuint texture = ReadPPMIntoTexture(image.c_str(), &width, &height);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -51,8 +55,8 @@ int main(int argc, char *argv[])
         {
             ImGui::SetNextWindowPos(ImVec2(100, 100), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 150), ImGuiCond_FirstUseEver);
-            ImGui::Begin("Hello World Window");
-            ImGui::Text("Hello World!");
+            ImGui::Begin("Original Image");
+            ImGui::Image((ImTextureID)(intptr_t)texture, ImVec2(width, height));
             ImGui::End();
         }
 
